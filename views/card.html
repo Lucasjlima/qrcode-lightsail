@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{name}} | Digital Business Card</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="card-page">
+      <article class="business-card">
+        <p class="eyebrow">Digital Business Card</p>
+        <h1>{{name}}</h1>
+        <p class="role">{{role}}</p>
+
+        <div class="links">
+          <a href="mailto:{{email}}">{{email}}</a>
+          <a href="{{linkedin}}" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="{{github}}" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+
+        <section class="card-qr" aria-label="QR code for this card">
+          <img src="{{qrCode}}" alt="QR code for {{name}}'s digital business card" />
+          <a href="{{cardUrl}}">{{cardUrl}}</a>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Card Generator</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="form-panel" aria-labelledby="page-title">
+        <p class="eyebrow">Digital Business Card</p>
+        <h1 id="page-title">Create a QR-ready card</h1>
+        <p class="intro">
+          Generate a public profile page and QR code for a clean mobile business card.
+        </p>
+
+        <form id="card-form" class="card-form">
+          <label>
+            <span>Name</span>
+            <input name="name" type="text" autocomplete="name" placeholder="Gabriel Silva" required />
+          </label>
+
+          <label>
+            <span>Role</span>
+            <input name="role" type="text" autocomplete="organization-title" placeholder="Cloud Practitioner" required />
+          </label>
+
+          <label>
+            <span>LinkedIn</span>
+            <input name="linkedin" type="text" inputmode="url" placeholder="linkedin.com/in/gabriel" required />
+          </label>
+
+          <label>
+            <span>GitHub</span>
+            <input name="github" type="text" inputmode="url" placeholder="github.com/gabriel" required />
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input name="email" type="email" autocomplete="email" placeholder="gabriel@example.com" required />
+          </label>
+
+          <button type="submit">Generate QR Card</button>
+          <p id="form-message" class="form-message" role="status"></p>
+        </form>
+      </section>
+
+      <section class="result-panel" aria-live="polite">
+        <div id="empty-state" class="empty-state">
+          <span class="qr-placeholder"></span>
+          <h2>Your QR code will appear here</h2>
+          <p>After generation, open the card URL or scan the code from a phone.</p>
+        </div>
+
+        <div id="result" class="result is-hidden">
+          <img id="qr-image" class="qr-image" alt="QR code for generated business card" />
+          <div>
+            <p class="result-label">Public card URL</p>
+            <a id="card-link" href="#" target="_blank" rel="noreferrer"></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

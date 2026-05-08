@@ -1,0 +1,22 @@
+{
+  "name": "qrcard",
+  "version": "1.0.0",
+  "description": "Digital business card generator with QR codes for AWS Lightsail deployment.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "qrcode",
+    "business-card",
+    "express",
+    "lightsail"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode": "^1.5.3"
+  }
+}
