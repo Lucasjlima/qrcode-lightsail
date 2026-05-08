@@ -2,7 +2,6 @@ node_modules/
 agent.md
 data/cards.json
 .env
-.env.*
 *.pem
 *.key
 npm-debug.log*

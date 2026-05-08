@@ -1,3 +1,4 @@
+require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
@@ -5,6 +6,7 @@ const QRCode = require("qrcode");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const BASE_URL = (process.env.BASE_URL || `http://localhost:${PORT}`).replace(/\/+$/, "");
 const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "cards.json");
 const CARD_TEMPLATE = path.join(__dirname, "views", "card.html");
@@ -65,14 +67,6 @@ function normalizeUrl(value) {
   return `https://${trimmed}`;
 }
 
-function getBaseUrl(req) {
-  if (process.env.PUBLIC_BASE_URL) {
-    return process.env.PUBLIC_BASE_URL.replace(/\/+$/, "");
-  }
-
-  return `${req.protocol}://${req.get("host")}`;
-}
-
 function createUniqueSlug(name, cards) {
   const base = slugify(name) || `card-${Date.now()}`;
   let slug = base;
@@ -129,8 +123,7 @@ app.post("/api/cards", async (req, res) => {
 
   const cards = readCards();
   const slug = createUniqueSlug(card.name, cards);
-  const baseUrl = getBaseUrl(req);
-  const cardUrl = `${baseUrl}/card/${slug}`;
+  const cardUrl = `${BASE_URL}/card/${slug}`;
   const qrCode = await QRCode.toDataURL(cardUrl, {
     errorCorrectionLevel: "M",
     margin: 2,
@@ -163,7 +156,7 @@ app.get("/card/:slug", async (req, res) => {
   }
 
   const template = fs.readFileSync(CARD_TEMPLATE, "utf8");
-  const currentUrl = `${getBaseUrl(req)}/card/${encodeURIComponent(card.slug)}`;
+  const currentUrl = `${BASE_URL}/card/${encodeURIComponent(card.slug)}`;
   const qrCode = await QRCode.toDataURL(currentUrl, {
     errorCorrectionLevel: "M",
     margin: 2,
@@ -186,6 +179,6 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`QR Card app running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on ${BASE_URL}`);
 });
