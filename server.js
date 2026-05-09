@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const express = require("express");
 const QRCode = require("qrcode");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,10 +13,15 @@ const DATA_DIR = path.join(__dirname, "data");
 const DATA_FILE = path.join(DATA_DIR, "cards.json");
 const CARD_TEMPLATE = path.join(__dirname, "views", "card.html");
 
+if (!process.env.ADMIN_SECRET) {
+  throw new Error("ADMIN_SECRET is required.");
+}
+
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(helmet());
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
 function readCards() {
@@ -29,6 +36,11 @@ function readCards() {
     return {};
   }
 }
+const createCardLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: "Muitas tentativas. Tente novamente mais tarde."
+});
 
 function writeCards(cards) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(cards, null, 2));
@@ -114,8 +126,12 @@ function validateCard(input) {
   return { card, errors };
 }
 
-app.post("/api/cards", async (req, res) => {
+app.post("/api/cards", createCardLimiter, async (req, res) => {
   const { card, errors } = validateCard(req.body);
+
+  if (req.body.secret !== process.env.ADMIN_SECRET) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   if (errors.length > 0) {
     return res.status(400).json({ errors });
