@@ -19,7 +19,15 @@ if (!process.env.ADMIN_SECRET) {
 
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "upgrade-insecure-requests": null
+      }
+    }
+  })
+);
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(express.static(path.join(__dirname, "public")));
